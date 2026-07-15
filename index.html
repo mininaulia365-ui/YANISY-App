@@ -6,6 +6,8 @@
     <title>YANISY Mini App</title>
     <!-- ПОДКЛЮЧЕНИЕ TELEGRAM SDK -->
     <script src="https://telegram.org"></script>
+    <!-- ИНСТРУКЦИЯ (ШАГ 1): ПРОСТЕЙШИЙ МЕТОД ЗАГРУЗКИ СКРИПТА С ВАШИМ ID 7301 -->
+    <script src="https://giga.pub" async></script>
     <style>
         :root {
             --bg-color: #F8F4FF;
@@ -41,7 +43,7 @@
         .task-card .btn { width: auto; margin-top: 0; padding: 10px 20px; background: #007AFF; color: white; font-size: 14px; border-radius: 10px; }
         
         .offerwall-section { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .ow-card { background: var(--card-white); border: 1px solid var(--accent-blue); border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-align: left; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .ow-card { background: var(--card-white); border: 1px solid var(--accent-blue); border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-align: left; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: none; outline: none; }
         .ow-icon { font-size: 26px; }
         .ow-info h3 { margin: 0; font-size: 16px; color: var(--text-main); }
         .ow-info p { margin: 4px 0 0 0; font-size: 12px; color: #8E8E93; }
@@ -69,7 +71,7 @@
 
         <h3 style="margin-top: 20px; font-size: 20px;">🧱 Главная витрина:</h3>
         <div class="offerwall-section">
-            <button class="ow-card" onclick="openGigaPub()">
+            <button class="ow-card" onclick="openOfferWall()">
                 <div class="ow-icon">📢</div>
                 <div class="ow-info"><h3>Платформа YANISY Offers</h3><p>Задания и офферы от рекламной стены GigaPub</p></div>
             </button>
@@ -148,8 +150,57 @@
     }
 
     const rewardList = Array(15, 18, 20, 22, 25);
-    const PROJECT_ID = "7301";
 
+    // ИНСТРУКЦИЯ (ШАГ 2): Обработка асинхронной загрузки SDK и привязка к ID 7301
+    window.loadGigaSDKCallbacks = window.loadGigaSDKCallbacks || [];
+    window.loadGigaSDKCallbacks.push(() => {
+        window.loadOfferWallSDK({
+            projectId: '7301' 
+        })
+        .then(sdk => {
+            // Сохраняем ссылку на SDK, как требует Шаг 2
+            window.gigaOfferWallSDK = sdk;
+
+            // Ловим событие успешного выполнения (Listen for reward claims)
+            sdk.on('rewardClaim', async (data) => {
+                console.log('Reward claim received:', data);
+                
+                // Начисляем монеты пользователю на баланс внутри Mini App
+                let earnedAmount = parseInt(data.amount) || 20;
+                balance += earnedAmount;
+                completedTasks += 1;
+                
+                localStorage.setItem('user_balance', balance);
+                localStorage.setItem('completed_tasks', completedTasks);
+                updateUI();
+
+                // Показываем красивое нативное сообщение в Telegram
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.showAlert(`✨ Задание выполнено! Тебе зачислено +${earnedAmount} U-COINS.`);
+                }
+
+                // Отправляем рекламодателям подтверждение (Confirm the reward)
+                sdk.confirmReward(data.rewardId, data.hash);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading GigaPub SDK:', error);
+        });
+    });
+
+    // ИНСТРУКЦИЯ (ШАГ 3): Чистая функция отображения OfferWall без ошибок доменов
+    function openOfferWall() {
+        if (window.gigaOfferWallSDK) {
+            window.gigaOfferWallSDK.open();
+        } else {
+            // На всякий случай: резервный веб-вариант, если сеть блокирует скрипт
+            let fallbackUrl = "https://giga.pub" + tgUserId;
+            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(fallbackUrl);
+            else window.open(fallbackUrl, '_blank');
+        }
+    }
+
+    // Генерация 100 оригинальных карточек
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -162,30 +213,10 @@
                         <b style="color: #2C3E50 !important;">Быстрое задание #${i}</b>
                         <span style="color: #8E8E93 !important; display: block; margin-top: 4px;">Награда: +${reward} U-COINS</span>
                     </div>
-                    <button class="btn btn-blue" onclick="openGigaPub()">Выполнить</button>
+                    <button class="btn btn-blue" onclick="openOfferWall()">Выполнить</button>
                 </div>
             `;
         }
-    }
-
-    // ИДЕАЛЬНАЯ ПРЯМАЯ ССЫЛКА НА ВАШУ КАНАЛ-СТЕНУ GIGAPUB ДЛЯ АВТО-ВЫПОЛНЕНИЯ
-    function openGigaPub() {
-        let directUrl = "https://giga.pub" + tgUserId;
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.openLink(directUrl);
-        } else {
-            window.open(directUrl, '_blank');
-        }
-        
-        // Симулируем проверку, чтобы у пользователя шел таймер как в оригинале
-        setTimeout(() => {
-            balance += 20;
-            completedTasks += 1;
-            localStorage.setItem('completed_tasks', completedTasks);
-            localStorage.setItem('user_balance', balance);
-            updateUI();
-        }, 15000);
     }
 
     function switchTab(pageId, element) {
@@ -222,6 +253,7 @@
         if (amount > balance) { alert('Недостаточно коинов на балансе!'); return; }
         
         balance -= amount;
+        localStorage.setItem('user_balance', balance);
         updateUI();
         alert("Заявка создана!\nСумма: " + amount + " коинов\nМетод: " + method.toUpperCase() + "\nРеквизиты: " + wallet);
         amountInput.value = ''; walletInput.value = '';
@@ -238,4 +270,3 @@
     </script>
 </body>
 </html>
-
