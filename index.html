@@ -173,15 +173,15 @@
         const container = document.getElementById('cards-container');
         if (!container) return;
         container.innerHTML = '';
-        for (let i = 1; i <= 30; i++) {
+        for (let i = 1; i <= 100; i++) {
             let reward = rewardList[i % rewardList.length];
             container.innerHTML += `
                 <div class="task-card">
                     <div>
-                        <b style="color: #2C3E50 !important;">Быстрое видео-задание #${i}</b>
+                        <b style="color: #2C3E50 !important;">Быстрое задание #${i}</b>
                         <span style="color: #34C759 !important; display: block; margin-top: 4px; font-weight: bold;">Награда: +${reward} U-COINS</span>
                     </div>
-                    <button class="btn btn-blue" onclick="executeVideoWaterfall(this, ${reward})">Смотреть</button>
+                    <button class="btn btn-blue" onclick="executeVideoWaterfall(this, ${reward})">Выполнить</button>
                 </div>
             `;
         }
