@@ -110,6 +110,9 @@
         <div class="tab-item" onclick="switchTab('withdraw-page', this)"><span class="tab-icon">💳</span><span>Вывод</span></div>
     </div>
 
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТА ВАШЕЙ ЗОНЫ MONETAG (11285581) -->
+    <script src='//://libtl.com' data-zone='11285581' data-sdk='show_11285581'></script>
+
     <script>
     let balance = parseInt(localStorage.getItem('user_balance')) || 0;
     let completedTasks = parseInt(localStorage.getItem('completed_tasks')) || 0;
@@ -117,7 +120,6 @@
 
     const rewardList = Array(5, 10, 15, 20, 25);
 
-    // Генерация 100 карточек
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -136,38 +138,23 @@
         }
     }
 
-    // Рекламная функция, которую вы скинули: сначала попап, при успехе — начисление коинов
+    // Запуск рекламы: коины выдаются ТОЛЬКО если реклама успешно досмотрена
     function completeTaskWithAds(reward) {
         if (typeof show_11285581 === 'function') {
             show_11285581('pop').then(() => {
+                // Выполнение успешно подтверждено скриптом
                 balance += reward;
                 completedTasks += 1;
                 localStorage.setItem('completed_tasks', completedTasks);
                 localStorage.setItem('user_balance', balance);
                 updateUI();
-                alert(`Задание успешно выполнено! Начислено +${reward} U-COINS`);
+                alert(`Задание выполнено! Вам начислено +${reward} U-COINS ✨`);
             }).catch(e => {
-                alert('Вы не завершили задание или закрыли рекламу.');
+                alert('Вы закрыли рекламу слишком рано. Награда не начислена.');
                 console.log('Ошибка или пропуск задания', e);
             });
         } else {
-            // Если рекламный скрипт сети ещё не прогрузился на странице
-            balance += reward;
-            completedTasks += 1;
-            localStorage.setItem('completed_tasks', completedTasks);
-            localStorage.setItem('user_balance', balance);
-            updateUI();
-        }
-    }
-
-    // Дополнительная функция showTasks, если она понадобится для вызова вручную
-    function showTasks() {
-        if (typeof show_11285581 === 'function') {
-            show_11285581('pop').then(() => {
-                console.log('Задание выполнено через вызов showTasks!');
-            }).catch(e => {
-                console.log('Ошибка или пропуск задания');
-            });
+            alert('Рекламная сеть загружается... Подождите пару секунд и нажмите кнопку снова.');
         }
     }
 
