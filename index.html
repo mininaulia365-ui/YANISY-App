@@ -5,32 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YANISY Mini App</title>
     <style>
+        /* Базовые стили и цвета */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
         body {
             background-color: #0A0A0A;
             color: #FFFFFF;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
             padding: 20px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
+        
+        /* Баланс в левом верхнем углу */
+        #balance-badge {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1A1A1A;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #FF007F;
+            border: 1px solid #333;
+            z-index: 100;
+            font-size: 14px;
+        }
+
         h1 {
             color: #FF007F;
-            font-size: 28px;
-            margin-bottom: 20px;
             text-align: center;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 20px;
         }
+
         .btn {
             display: block;
             width: 100%;
-            max-width: 320px;
-            padding: 15px;
-            margin: 10px auto;
+            max-width: 340px;
+            margin: 12px auto;
+            padding: 16px;
             border-radius: 12px;
             border: none;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             text-align: center;
             text-decoration: none;
@@ -39,43 +56,154 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn-pink {
-            background-color: #FF007F;
+        .btn-pink { background-color: #FF007F; }
+        .btn:hover { opacity: 0.8; }
+
+        /* Вкладки (статистика, вывод, рефералы) */
+        .tab-content { display: none; margin-top: 10px; }
+        .tab-content.active { display: block; }
+
+        /* Форма вывода */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 14px; color: #AAA; margin-bottom: 5px; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #1A1A1A;
+            color: #FFF;
+            font-size: 16px;
         }
-        .btn:hover {
-            opacity: 0.8;
-            transform: scale(1.02);
+        .form-group select { appearance: auto; }
+
+        /* Статистика */
+        .stat-card {
+            background-color: #1A1A1A;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #FF007F;
         }
+        .stat-card span { color: #FF007F; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <!-- БАЛАНС (Левый верхний угол, обновляется автоматически) -->
+    <div id="balance-badge">🪙 <span id="user-balance">0</span> Y-Coins</div>
+
     <h1>YANISY</h1>
 
-    <!-- Эта кнопка запускает задания -->
-    <button id="taskBtn" class="btn btn-pink" onclick="openOfferWall()">📋 Открыть задания</button>
-
-    <button class="btn" onclick="alert('Баланс: ' + (localStorage.getItem('user_balance') || 0))">📊 Статистика</button>
+    <!-- ГЛАВНЫЕ КНОПКИ -->
+    <button class="btn btn-pink" onclick="openOfferWall()">📋 Открыть задания</button>
+    
+    <button class="btn" onclick="switchTab('stats')">📊 Статистика</button>
+    <button class="btn" onclick="switchTab('withdraw')">💸 Вывод</button>
+    <button class="btn" onclick="switchTab('referrals')">👥 Рефералы</button>
     <button class="btn" onclick="window.open('https://t.me/YANISY_bot', '_blank')">🆘 Поддержка</button>
-    <button class="btn" onclick="alert('Напиши мне в личку для вывода')">💸 Вывод</button>
+
+    <!-- СТАТИСТИКА -->
+    <div id="stats" class="tab-content active">
+        <div class="stat-card">✅ Выполнено заданий: <span id="tasks-done">0</span></div>
+        <div class="stat-card">⏳ На проверке: <span id="tasks-pending">0</span></div>
+        <div class="stat-card">📊 Всего заработано: <span id="total-earned">0</span> Y-Coins</div>
+    </div>
+
+    <!-- ВЫВОД -->
+    <div id="withdraw" class="tab-content">
+        <div class="form-group">
+            <label>Сумма вывода (мин. 100 Y-Coins)</label>
+            <input type="number" id="withdraw-amount" placeholder="Например: 150">
+        </div>
+        <div class="form-group">
+            <label>Способ вывода</label>
+            <select id="withdraw-method">
+                <option value="">Выберите способ</option>
+                <option value="sbp">СБП (по номеру телефона)</option>
+                <option value="tinkoff">Тинькофф</option>
+                <option value="card">Карта (любой банк)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Реквизиты (номер карты или телефона)</label>
+            <input type="text" id="withdraw-details" placeholder="Номер карты или телефона">
+        </div>
+        <button class="btn btn-pink" onclick="sendWithdraw()">📤 Отправить заявку</button>
+    </div>
+
+    <!-- РЕФЕРАЛЫ -->
+    <div id="referrals" class="tab-content">
+        <div class="form-group">
+            <label>Кто тебя привёл? (выбери из списка)</label>
+            <select id="referral-select">
+                <option value="">— Выберите реферала —</option>
+                <option value="ref1">Реферал №1</option>
+                <option value="ref2">Реферал №2</option>
+                <option value="ref3">Реферал №3</option>
+                <option value="ref4">Реферал №4</option>
+                <option value="ref5">Реферал №5</option>
+                <option value="ref6">Реферал №6</option>
+                <option value="other">Другой (напишу сам)</option>
+            </select>
+        </div>
+    </div>
 
     <script>
-        // Инициализация Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
+        // ==================== ЛОГИКА БАЛАНСА И СТАТИСТИКИ ====================
+        let balance = parseInt(localStorage.getItem('user_balance')) || 0;
+        let tasksDone = parseInt(localStorage.getItem('tasks_done')) || 0;
+        let tasksPending = parseInt(localStorage.getItem('tasks_pending')) || 0;
+
+        function updateUI() {
+            document.getElementById('user-balance').innerText = balance;
+            document.getElementById('tasks-done').innerText = tasksDone;
+            document.getElementById('tasks-pending').innerText = tasksPending;
+            document.getElementById('total-earned').innerText = balance;
+        }
+        updateUI();
+
+        // ==================== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ====================
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
         }
 
-        // ТВОЙ PROJECT_ID ИЗ GIGAPUB
-        const PROJECT_ID = "7301"; 
+        // ==================== ВЫВОД (ОТПРАВКА ЗАЯВКИ) ====================
+        function sendWithdraw() {
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const method = document.getElementById('withdraw-method').value;
+            const details = document.getElementById('withdraw-details').value.trim();
 
-        // Функция открытия стены заданий (исправленная)
+            if (!amount || amount < 100) return alert('❌ Минимальная сумма вывода: 100 Y-Coins');
+            if (!method) return alert('❌ Выбери способ вывода');
+            if (!details) return alert('❌ Введи реквизиты (карту или телефон)');
+            if (amount > balance) return alert('❌ Недостаточно Y-Coins на балансе');
+
+            // Отправка заявки (здесь можно добавить отправку в бота)
+            const requestData = {
+                type: 'withdraw',
+                amount: amount,
+                method: method,
+                details: details,
+                user: tgUserId
+            };
+            console.log('📤 Заявка на вывод:', requestData);
+
+            // Списываем баланс и показываем уведомление
+            balance -= amount;
+            localStorage.setItem('user_balance', balance);
+            updateUI();
+            alert('✅ Заявка отправлена! Ожидай ответа создателя.');
+        }
+
+        // ==================== ПОДКЛЮЧЕНИЕ GIGAPUB SDK ====================
+        const PROJECT_ID = "7301"; // ЗАМЕНИ НА СВОЙ ID
+
         function openOfferWall() {
             if (window.gigaOfferWallSDK) {
                 window.gigaOfferWallSDK.open();
             } else {
-                // Если SDK ещё не загрузился, грузим сейчас
-                console.log("Загружаем SDK GigaPub...");
                 window.loadOfferWallSDK({ projectId: PROJECT_ID })
                     .then(sdk => {
                         window.gigaOfferWallSDK = sdk;
@@ -83,12 +211,12 @@
                     })
                     .catch(err => {
                         console.error("Ошибка загрузки SDK:", err);
-                        alert("Ошибка загрузки заданий. Проверь проект ID.");
+                        alert("Не удалось загрузить задания. Проверь PROJECT_ID.");
                     });
             }
         }
 
-        // Начисление награды (если задание выполнено)
+        // Начисление награды
         window.loadGigaSDKCallbacks = window.loadGigaSDKCallbacks || [];
         window.loadGigaSDKCallbacks.push(() => {
             window.loadOfferWallSDK({ projectId: PROJECT_ID })
@@ -96,17 +224,27 @@
                     window.gigaOfferWallSDK = sdk;
                     sdk.on('rewardClaim', async (data) => {
                         let earned = parseInt(data.amount) || 10;
-                        let balance = parseInt(localStorage.getItem('user_balance')) || 0;
                         balance += earned;
+                        tasksDone += 1;
                         localStorage.setItem('user_balance', balance);
+                        localStorage.setItem('tasks_done', tasksDone);
+                        updateUI();
                         if (window.Telegram && window.Telegram.WebApp) {
-                            window.Telegram.WebApp.showAlert('✅ +' + earned + ' коинов!');
+                            window.Telegram.WebApp.showAlert('✅ +' + earned + ' Y-Coins!');
                         }
                         sdk.confirmReward(data.rewardId, data.hash);
                     });
                 })
                 .catch(err => console.error("Ошибка инициализации GigaPub:", err));
         });
+
+        // ==================== ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ====================
+        let tgUserId = "test_user";
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            tgUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || "test_user";
+        }
     </script>
 </body>
 </html>
