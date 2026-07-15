@@ -10,7 +10,7 @@
             --text-color: #2C3E50;     /* Темно-серый мягкий текст */
             --accent-pink: #FFF0F5;    /* Нежно-розовый пастельный для плашек */
             --accent-blue: #E0F2FE;    /* Пастельно-синий для кнопок */
-            --card-white: #FFFFFF;     /* White для карточек */
+            --card-white: #FFFFFF;     /* Белый для карточек */
             --text-main: #333333;
         }
         body {
@@ -228,14 +228,16 @@
         let userSource = localStorage.getItem('user_source') || '';
         let hasEntered = localStorage.getItem('has_entered') || 'false';
 
+        // Твои 4 промокода для админов
         const validPromos = ['косметичка', 'птичка', 'ириска', 'малинка'];
 
-        // Исправленный генератор СТО КАРТОЧЕК
+        // Генератор СТО КАРТОЧЕК с фиксированными наградами
         function generate100Cards() {
             const container = document.getElementById('cards-container');
             if(!container) return;
             container.innerHTML = '';
             
+            // Задаем фиксированный список наград для чередования
             const rewardsList =; 
             
             for (let i = 1; i <= 100; i++) {
@@ -246,7 +248,7 @@
                             <b style="font-size:15px; display:block;">Быстрое задание #${i}</b>
                             <span style="font-size:13px; color:#8E8E93;">Награда: +${reward} U-COINS</span>
                         </div>
-                        <a href="https://omg10.com/4/11302575" target="_blank" class="btn" onclick="completeTaskSimulate(${reward})">Выполнить</a>
+                        <a href="https://omg10.com" target="_blank" class="btn" onclick="completeTaskSimulate(${reward})">Выполнить</a>
                     </div>
                 `;
             }
@@ -263,7 +265,7 @@
             let input = document.getElementById('promo-input').value.trim().toLowerCase();
             
             if (validPromos.includes(input)) {
-                balance = 30;
+                balance = 30; // Приветственные коины
                 userSource = input;
                 hasEntered = 'true';
                 
@@ -289,7 +291,7 @@
         function completeTaskSimulate(reward) {
             pendingTasks += 1;
             updateUI();
-            alert haste(`Задание запущено! Оно добавлено в твою статистику "В проверке".`);
+            alert(`Задание запущено! Оно добавлено в твою статистику "В проверке".`);
         }
 
         function updateUI() {
