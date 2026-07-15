@@ -40,7 +40,7 @@
         .task-card span { font-size: 14px; }
         .task-card .btn { width: auto; margin-top: 0; padding: 10px 20px; background: #007AFF; color: white; font-size: 14px; border-radius: 10px; }
         
-        /* Стили для блока готовых витрин */
+        /* Стили для блока главной витрины TADS */
         .offerwall-section { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         .ow-card { background: var(--card-white); border: 1px solid var(--accent-blue); border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-align: left; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .ow-icon { font-size: 26px; }
@@ -68,19 +68,11 @@
             <p style="line-height: 1.5; margin: 0;">Я очень рада, что ты посещаешь мои mini-приложения. Выполняй задания и зарабатывай коины!</p>
         </div>
 
-        <h3 style="margin-top: 20px; font-size: 20px;">🧱 Большие витрины:</h3>
+        <h3 style="margin-top: 20px; font-size: 20px;">🧱 Главная витрина:</h3>
         <div class="offerwall-section">
             <button class="ow-card" onclick="openTads()">
                 <div class="ow-icon">📢</div>
                 <div class="ow-info"><h3>Платформа TADS</h3><p>Подписки на каналы и быстрый запуск ботов</p></div>
-            </button>
-            <button class="ow-card" onclick="openOfferwall('NOTIK', 'https://notik.one')">
-                <div class="ow-icon">📱</div>
-                <div class="ow-info"><h3>Платформа NOTIK</h3><p>Скачивание приложений и mini-тесты</p></div>
-            </button>
-            <button class="ow-card" onclick="openOfferwall('KIWIWALL', 'https://kiwiwall.com')">
-                <div class="ow-icon">🥝</div>
-                <div class="ow-info"><h3>Платформа KIWIWALL</h3><p>Простые клики, серфинг и лайки</p></div>
             </button>
         </div>
 
@@ -144,23 +136,19 @@
         <div class="tab-item" onclick="switchTab('withdraw-page', this)"><span class="tab-icon">💳</span><span>Вывод</span></div>
     </div>
         <script>
-    // Загрузка сохраненных данных пользователя из браузера
     let balance = parseInt(localStorage.getItem('user_balance')) || 0;
     let completedTasks = parseInt(localStorage.getItem('completed_tasks')) || 0;
     let pendingTasks = parseInt(localStorage.getItem('pending_tasks')) || 0;
     let tgUserId = "test_user";
 
-    // Считывание данных из Telegram WebApp API
     if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
         tgUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || "test_user";
     }
 
-    // Массив наград (от 15 до 25 коинов согласно экономике проекта)
     const rewardList = Array(15, 18, 20, 22, 25);
 
-    // 1. Генерация 100 карточек заданий на базе TADS
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -179,32 +167,28 @@
         }
     }
 
-    // 2. Логика запуска TADS-офферов + 15-секундный защитный таймер удержания
     function executeTadsTask(buttonElement, reward) {
         buttonElement.disabled = true;
         buttonElement.innerText = "Запуск...";
 
-        // Формирование ссылки TADS с авто-подстановкой ID юзера
-        let tadsUrl = `https://tads.me{tgUserId}`;
+        // Исправленное склеивание ссылки и ID пользователя
+        let tadsUrl = "https://tads.me" + tgUserId;
         
-        // Открытие ссылки внутри интерфейса Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.openLink(tadsUrl);
         } else {
             window.open(tadsUrl, '_blank');
         }
 
-        // Запуск защитного таймера удержания на 15 секунд (защита от моментального закрытия)
         let timeLeft = 15;
         const interval = setInterval(() => {
             timeLeft--;
-            buttonElement.innerText = `${timeLeft} сек`;
+            buttonElement.innerText = timeLeft + " сек";
             buttonElement.style.background = '#BDC3C7';
             
             if (timeLeft <= 0) {
                 clearInterval(interval);
                 
-                // Начисление монет и сохранение в память телефона
                 balance += reward;
                 completedTasks += 1;
                 localStorage.setItem('completed_tasks', completedTasks);
@@ -215,25 +199,17 @@
                 buttonElement.style.background = "#2ECC71";
                 buttonElement.disabled = true;
                 
-                alert(`Задание проверено платформой TADS! Начислено +${reward} U-COINS. ✨`);
+                alert("Задание проверено платформой TADS! Начислено +" + reward + " U-COINS. ✨");
             }
         }, 1000);
     }
 
-    // 3. Функции для верхних кнопок (Блок готовых витрин)
     function openTads() {
-        let tadsUrl = `https://tads.me{tgUserId}`;
+        let tadsUrl = "https://tads.me" + tgUserId;
         if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(tadsUrl);
         else window.open(tadsUrl, '_blank');
     }
 
-    function openOfferwall(name, fallbackUrl) {
-        let finalUrl = fallbackUrl + `?user_id=${tgUserId}`;
-        if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(finalUrl);
-        else window.open(finalUrl, '_blank');
-    }
-
-    // 4. Логика навигации и обновления интерфейса
     function switchTab(pageId, element) {
         document.querySelectorAll('.content').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -253,7 +229,6 @@
         if (statCheck) statCheck.innerText = pendingTasks;
     }
 
-    // 5. Обработка формы вывода средств
     function sendWithdraw() {
         let amountInput = document.getElementById('withdraw-amount');
         let methodInput = document.getElementById('withdraw-method');
@@ -271,11 +246,10 @@
         balance -= amount;
         localStorage.setItem('user_balance', balance);
         updateUI();
-        alert(`Заявка создана!\nСумма: ${amount} коинов\nМетод: ${method.toUpperCase()}\nРеквизиты: ${wallet}`);
+        alert("Заявка создана!\nСумма: " + amount + " коинов\nМетод: " + method.toUpperCase() + "\nРеквизиты: " + wallet);
         amountInput.value = ''; walletInput.value = '';
     }
 
-    // 6. Кнопка поддержки
     function openSupportLink() {
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.openTelegramLink('https://t.me');
@@ -284,7 +258,6 @@
         }
     }
 
-    // Первоначальный запуск системы
     generate100Cards();
     updateUI();
     </script>
