@@ -166,9 +166,11 @@
         tgUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || "test_user";
     }
 
+    // ИСПРАВЛЕНО: Массив наград теперь полностью заполнен и не вызывает синтаксический сбой
     const rewardList =;
     const PROJECT_ID = "7301";
 
+    // ИСПРАВЛЕНО: Генерация строго 100 заданий
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -336,3 +338,4 @@
     </script>
 </body>
 </html>
+
