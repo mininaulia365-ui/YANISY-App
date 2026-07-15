@@ -6,7 +6,7 @@
     <title>YANISY Mini App</title>
     <!-- ПОДКЛЮЧЕНИЕ TELEGRAM SDK -->
     <script src="https://telegram.org"></script>
-    <!-- ИНСТРУКЦИЯ (ШАГ 1): ПРОСТЕЙШИЙ МЕТОД ЗАГРУЗКИ СКРИПТА С ВАШИМ ID 7301 -->
+    <!-- ИНСТРУКЦИЯ (ШАГ 1): ОФИЦИАЛЬНЫЙ ТЕГ ЗАГРУЗКИ СКРИПТА С ВАШИМ ID 7301 -->
     <script src="https://giga.pub" async></script>
     <style>
         :root {
@@ -35,8 +35,9 @@
         .welcome-box { background: var(--card-white); padding: 25px; border-radius: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-left: 5px solid #007AFF; }
         .welcome-box h2 { font-size: 24px; margin-top: 0; }
         .welcome-box p { font-size: 16px; }
-        .btn { display: block; width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; box-sizing: border-box; font-size: 16px; }
+        .btn { display: block; width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; box-sizing: border-box; font-size: 16px; transition: background 0.2s, transform 0.1s; }
         .btn-blue { background: #007AFF; color: white; }
+        .btn-blue:active { transform: scale(0.98); }
         .task-card { background: var(--card-white); padding: 18px; border-radius: 18px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 8px rgba(0,0,0,0.03); }
         .task-card b { font-size: 17px; }
         .task-card span { font-size: 14px; }
@@ -132,7 +133,7 @@
     <!-- НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ -->
     <div class="tab-bar">
         <div class="tab-item active" onclick="switchTab('tasks-page', this)"><span class="tab-icon">📋</span><span>Задания</span></div>
-        <div class="tab-item" onclick="switchTab('stats-page', this)"><span class="tab-icon">📊</span><span>Статистика</span></div>
+        <div class="tab-item" onclick="statsPageTrigger(this)"><span class="tab-icon">📊</span><span>Статистика</span></div>
         <div class="tab-item" onclick="switchTab('support-page', this)"><span class="tab-icon">📬</span><span>Поддержка</span></div>
         <div class="tab-item" onclick="switchTab('withdraw-page', this)"><span class="tab-icon">💳</span><span>Вывод</span></div>
     </div>
@@ -150,22 +151,22 @@
     }
 
     const rewardList = Array(15, 18, 20, 22, 25);
+    const PROJECT_ID = "7301";
 
-    // ИНСТРУКЦИЯ (ШАГ 2): Обработка асинхронной загрузки SDK и привязка к ID 7301
+    // ИНСТРУКЦИЯ (ШАГ 2): Автоматическая безопасная инициализация SDK GigaPub
     window.loadGigaSDKCallbacks = window.loadGigaSDKCallbacks || [];
     window.loadGigaSDKCallbacks.push(() => {
         window.loadOfferWallSDK({
-            projectId: '7301' 
+            projectId: PROJECT_ID 
         })
         .then(sdk => {
-            // Сохраняем ссылку на SDK, как требует Шаг 2
             window.gigaOfferWallSDK = sdk;
 
-            // Ловим событие успешного выполнения (Listen for reward claims)
+            // Ловим событие rewardClaim прямо из вашей инструкции
             sdk.on('rewardClaim', async (data) => {
-                console.log('Reward claim received:', data);
+                console.log('Награда зафиксирована:', data);
                 
-                // Начисляем монеты пользователю на баланс внутри Mini App
+                // Начисляем U-COINS пользователю на баланс
                 let earnedAmount = parseInt(data.amount) || 20;
                 balance += earnedAmount;
                 completedTasks += 1;
@@ -174,33 +175,33 @@
                 localStorage.setItem('completed_tasks', completedTasks);
                 updateUI();
 
-                // Показываем красивое нативное сообщение в Telegram
+                // Показываем официальное уведомление в Telegram
                 if (window.Telegram && window.Telegram.WebApp) {
                     window.Telegram.WebApp.showAlert(`✨ Задание выполнено! Тебе зачислено +${earnedAmount} U-COINS.`);
                 }
 
-                // Отправляем рекламодателям подтверждение (Confirm the reward)
+                // Подтверждаем получение награды для GigaPub
                 sdk.confirmReward(data.rewardId, data.hash);
             });
         })
         .catch(error => {
-            console.error('Error loading GigaPub SDK:', error);
+            console.error('Ошибка инициализации SDK GigaPub:', error);
         });
     });
 
-    // ИНСТРУКЦИЯ (ШАГ 3): Чистая функция отображения OfferWall без ошибок доменов
+    // ШАГ 3 ИЗ ИНСТРУКЦИИ: Функция правильного нативного открытия стены
     function openOfferWall() {
         if (window.gigaOfferWallSDK) {
             window.gigaOfferWallSDK.open();
         } else {
-            // На всякий случай: резервный веб-вариант, если сеть блокирует скрипт
-            let fallbackUrl = "https://giga.pub" + tgUserId;
+            // Если AdBlock/VPN блокирует скрипты хостинга, плавно открываем веб-версию
+            let fallbackUrl = `https://giga.pub{PROJECT_ID}?subId=${tgUserId}`;
             if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(fallbackUrl);
             else window.open(fallbackUrl, '_blank');
         }
     }
 
-    // Генерация 100 оригинальных карточек
+    // Генерация ровно 100 карточек заданий из вашего исходника
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -225,6 +226,11 @@
         const targetPage = document.getElementById(pageId);
         if (targetPage) targetPage.classList.add('active');
         if (element) element.classList.add('active');
+    }
+
+    function statsPageTrigger(element) {
+        updateUI();
+        switchTab('stats-page', element);
     }
 
     function updateUI() {
@@ -259,6 +265,7 @@
         amountInput.value = ''; walletInput.value = '';
     }
 
+    // Кнопка официальной поддержки
     function openSupportLink() {
         let supportUrl = 'https://t.me';
         if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openTelegramLink(supportUrl);
