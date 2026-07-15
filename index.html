@@ -73,8 +73,7 @@
             <div class="stats-row">Ожидает проверки: <span id="stat-check-count">0</span> задач</div>
         </div>
     </div>
-    
-    <div id="support-page" class="content">
+        <div id="support-page" class="content">
         <h2>✉️ Поддержка</h2>
         <div class="welcome-box">
             <p style="font-size: 16px; margin: 0 0 15px 0;">Если у вас есть какие-то вопросы или вы хотели что-то предложить, напишите нам:</p>
@@ -118,6 +117,7 @@
 
     const rewardList = Array(5, 10, 15, 20, 25);
 
+    // Генерация 100 карточек
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -130,9 +130,44 @@
                         <b style="color: #2C3E50 !important;">Быстрое задание #${i}</b>
                         <span style="color: #8E8E93 !important; display: block; margin-top: 4px;">Награда: +${reward} U-COINS</span>
                     </div>
-                    <a href="https://omg10.com" target="_blank" class="btn btn-blue" onclick="completeTaskSimulate(${reward})">Выполнить</a>
+                    <button class="btn btn-blue" onclick="completeTaskWithAds(${reward})">Выполнить</button>
                 </div>
             `;
+        }
+    }
+
+    // Рекламная функция, которую вы скинули: сначала попап, при успехе — начисление коинов
+    function completeTaskWithAds(reward) {
+        if (typeof show_11285581 === 'function') {
+            show_11285581('pop').then(() => {
+                balance += reward;
+                completedTasks += 1;
+                localStorage.setItem('completed_tasks', completedTasks);
+                localStorage.setItem('user_balance', balance);
+                updateUI();
+                alert(`Задание успешно выполнено! Начислено +${reward} U-COINS`);
+            }).catch(e => {
+                alert('Вы не завершили задание или закрыли рекламу.');
+                console.log('Ошибка или пропуск задания', e);
+            });
+        } else {
+            // Если рекламный скрипт сети ещё не прогрузился на странице
+            balance += reward;
+            completedTasks += 1;
+            localStorage.setItem('completed_tasks', completedTasks);
+            localStorage.setItem('user_balance', balance);
+            updateUI();
+        }
+    }
+
+    // Дополнительная функция showTasks, если она понадобится для вызова вручную
+    function showTasks() {
+        if (typeof show_11285581 === 'function') {
+            show_11285581('pop').then(() => {
+                console.log('Задание выполнено через вызов showTasks!');
+            }).catch(e => {
+                console.log('Ошибка или пропуск задания');
+            });
         }
     }
 
@@ -142,14 +177,6 @@
         const targetPage = document.getElementById(pageId);
         if (targetPage) targetPage.classList.add('active');
         if (element) element.classList.add('active');
-    }
-
-    function completeTaskSimulate(reward) {
-        pendingTasks += 1;
-        balance += reward;
-        localStorage.setItem('pending_tasks', pendingTasks);
-        localStorage.setItem('user_balance', balance);
-        updateUI();
     }
 
     function updateUI() {
