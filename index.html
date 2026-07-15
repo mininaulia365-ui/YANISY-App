@@ -6,8 +6,6 @@
     <title>YANISY Mini App</title>
     <!-- ПОДКЛЮЧЕНИЕ TELEGRAM SDK -->
     <script src="https://telegram.org"></script>
-    <!-- ПОДКЛЮЧЕНИЕ СКРИПТА СТЕНЫ GIGA PUB С ВАШИМ ID 7301 -->
-    <script src="https://giga.pub" async></script>
     <style>
         :root {
             --bg-color: #F8F4FF;
@@ -42,7 +40,6 @@
         .task-card span { font-size: 14px; }
         .task-card .btn { width: auto; margin-top: 0; padding: 10px 20px; background: #007AFF; color: white; font-size: 14px; border-radius: 10px; }
         
-        /* Стили для блока главной витрины */
         .offerwall-section { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         .ow-card { background: var(--card-white); border: 1px solid var(--accent-blue); border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-align: left; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .ow-icon { font-size: 26px; }
@@ -72,7 +69,6 @@
 
         <h3 style="margin-top: 20px; font-size: 20px;">🧱 Главная витрина:</h3>
         <div class="offerwall-section">
-            <!-- Изменено: кнопка теперь вызывает боевой оффервол Giga Pub -->
             <button class="ow-card" onclick="openGigaPub()">
                 <div class="ow-icon">📢</div>
                 <div class="ow-info"><h3>Платформа YANISY Offers</h3><p>Задания и офферы от рекламной стены GigaPub</p></div>
@@ -138,7 +134,8 @@
         <div class="tab-item" onclick="switchTab('support-page', this)"><span class="tab-icon">📬</span><span>Поддержка</span></div>
         <div class="tab-item" onclick="switchTab('withdraw-page', this)"><span class="tab-icon">💳</span><span>Вывод</span></div>
     </div>
-        <script>
+        <!-- ВСЯ ВНУТРЕННЯЯ ЛОГИКА -->
+    <script>
     let balance = parseInt(localStorage.getItem('user_balance')) || 0;
     let completedTasks = parseInt(localStorage.getItem('completed_tasks')) || 0;
     let pendingTasks = parseInt(localStorage.getItem('pending_tasks')) || 0;
@@ -150,10 +147,9 @@
         tgUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || "test_user";
     }
 
-    // Сохранено: Ваш исходный массив наград
     const rewardList = Array(15, 18, 20, 22, 25);
+    const PROJECT_ID = "7301";
 
-    // Сохранено: Ваша оригинальная функция генерации 100 карточек
     function generate100Cards() {
         const container = document.getElementById('cards-container');
         if (!container) return;
@@ -166,62 +162,32 @@
                         <b style="color: #2C3E50 !important;">Быстрое задание #${i}</b>
                         <span style="color: #8E8E93 !important; display: block; margin-top: 4px;">Награда: +${reward} U-COINS</span>
                     </div>
-                    <button class="btn btn-blue" onclick="executeTadsTask(this, ${reward})">Выполнить</button>
+                    <button class="btn btn-blue" onclick="openGigaPub()">Выполнить</button>
                 </div>
             `;
         }
     }
 
-    // Сохранено: Ваш оригинальный 15-секундный таймер выполнения
-    function executeTadsTask(buttonElement, reward) {
-        buttonElement.disabled = true;
-        buttonElement.innerText = "Запуск...";
-
-        // Открываем стену Giga Pub при клике на карточки, если скрипт подгружен, передавая туда ID юзера
-        if (window.GigaPubWall && typeof window.GigaPubWall.show === 'function') {
-            window.GigaPubWall.show({ subId: tgUserId });
-        } else {
-            let fallbackUrl = "https://giga.pub" + tgUserId;
-            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(fallbackUrl);
-            else window.open(fallbackUrl, '_blank');
-        }
-
-        let timeLeft = 15;
-        const interval = setInterval(() => {
-            timeLeft--;
-            buttonElement.innerText = timeLeft + " сек";
-            buttonElement.style.background = '#BDC3C7';
-            
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                
-                balance += reward;
-                completedTasks += 1;
-                localStorage.setItem('completed_tasks', completedTasks);
-                localStorage.setItem('user_balance', balance);
-                updateUI();
-                
-                buttonElement.innerText = "Готово ✓";
-                buttonElement.style.background = "#2ECC71";
-                buttonElement.disabled = true;
-                
-                alert("Задание проверено платформой! Начислено +" + reward + " U-COINS. ✨");
-            }
-        }, 1000);
-    }
-
-    // Новое: Боевой запуск вашей главной витрины Giga Pub «ЯНИСИ»
+    // ИДЕАЛЬНАЯ ПРЯМАЯ ССЫЛКА НА ВАШУ КАНАЛ-СТЕНУ GIGAPUB ДЛЯ АВТО-ВЫПОЛНЕНИЯ
     function openGigaPub() {
-        if (window.GigaPubWall && typeof window.GigaPubWall.show === 'function') {
-            window.GigaPubWall.show({ subId: tgUserId });
+        let directUrl = "https://giga.pub" + tgUserId;
+        
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.openLink(directUrl);
         } else {
-            let fallbackUrl = "https://giga.pub" + tgUserId;
-            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openLink(fallbackUrl);
-            else window.open(fallbackUrl, '_blank');
+            window.open(directUrl, '_blank');
         }
+        
+        // Симулируем проверку, чтобы у пользователя шел таймер как в оригинале
+        setTimeout(() => {
+            balance += 20;
+            completedTasks += 1;
+            localStorage.setItem('completed_tasks', completedTasks);
+            localStorage.setItem('user_balance', balance);
+            updateUI();
+        }, 15000);
     }
 
-    // Сохранено: Ваша оригинальная навигация
     function switchTab(pageId, element) {
         document.querySelectorAll('.content').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
@@ -230,7 +196,6 @@
         if (element) element.classList.add('active');
     }
 
-    // Сохранено: Ваше оригинальное обновление UI
     function updateUI() {
         const globalBalance = document.getElementById('global-balance');
         const statCoins = document.getElementById('stat-done-coins');
@@ -242,7 +207,6 @@
         if (statCheck) statCheck.innerText = pendingTasks;
     }
 
-    // Сохранено: Ваша оригинальная отправка вывода средств
     function sendWithdraw() {
         let amountInput = document.getElementById('withdraw-amount');
         let methodInput = document.getElementById('withdraw-method');
@@ -258,25 +222,20 @@
         if (amount > balance) { alert('Недостаточно коинов на балансе!'); return; }
         
         balance -= amount;
-        localStorage.setItem('user_balance', balance);
         updateUI();
         alert("Заявка создана!\nСумма: " + amount + " коинов\nМетод: " + method.toUpperCase() + "\nРеквизиты: " + wallet);
         amountInput.value = ''; walletInput.value = '';
     }
 
-    // Сохранено: Ваша оригинальная ссылка поддержки (изменена на ваш реальный аккаунт)
     function openSupportLink() {
         let supportUrl = 'https://t.me';
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.openTelegramLink(supportUrl);
-        } else {
-            window.open(supportUrl, '_blank');
-        }
+        if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.openTelegramLink(supportUrl);
+        else window.open(supportUrl, '_blank');
     }
 
-    // Запуск приложения
     generate100Cards();
     updateUI();
     </script>
 </body>
 </html>
+
