@@ -6,151 +6,40 @@
     <title>YANISY</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f2ef;
-            color: #1a1a1a;
-            padding: 20px 16px;
-            max-width: 480px;
-            margin: 0 auto;
-            padding-bottom: 100px;
-        }
+        body { background: #f5f2ef; font-family: sans-serif; padding: 20px 16px; max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
         .hidden { display: none; }
-        .header {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            margin-bottom: 12px;
-        }
-        .header h1 { font-size: 20px; font-weight: 700; color: #2b2b2b; }
-        .header-balance {
-            background: #e8e0da;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            color: #3d2c1e;
-        }
-        .welcome-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            border-left: 4px solid #4a7a6b;
-        }
-        .welcome-card h2 { font-size: 18px; color: #2b2b2b; }
-        .welcome-card p { color: #5f4f3f; margin-top: 6px; font-size: 14px; }
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2b2b2b;
-            margin: 16px 0 8px 0;
-        }
-        .task-card {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-            cursor: pointer;
-        }
-        .task-card:active { background: #f2ece8; }
-        .task-left h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-        .task-left p { font-size: 13px; color: #6f5f4f; }
-        .task-right { font-weight: 600; color: #4a7a6b; font-size: 15px; }
+        .header { background: #fff; border-radius: 16px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header h1 { font-size: 20px; }
+        .header-balance { background: #eee; padding: 4px 14px; border-radius: 20px; font-weight: 600; }
+        .welcome-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+        .welcome-card h2 { font-size: 17px; }
+        .task-card { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; cursor: pointer; }
+        .task-right { font-weight: 600; color: #4a7a6b; }
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0 18px 0;
-            border-top: 1px solid #e8e2dc;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff;
+            display: flex; justify-content: space-around; padding: 8px 0 16px 0; border-top: 1px solid #ddd;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 11px;
-            color: #8a7a6a;
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: 12px;
-        }
-        .nav-item.active { color: #2b2b2b; font-weight: 500; background: #f2ece8; }
-        .nav-item span { font-size: 20px; margin-bottom: 2px; }
-        .page { display: none; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #888; cursor: pointer; }
+        .nav-item.active { color: #000; font-weight: 600; }
+        .nav-item span { font-size: 20px; }
+        .page { display: none; padding-bottom: 80px; }
         .page.active { display: block; }
-        .profile-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .profile-card {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-        }
-        .btn-primary {
-            background: #4a7a6b;
-            color: #ffffff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #4a7a6b;
-            color: #4a7a6b;
-            padding: 10px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .lb-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .small-text { font-size: 13px; color: #6f5f4f; }
-        .emoji-big { font-size: 28px; line-height: 1; }
-        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .profile-card { background: #fff; border-radius: 14px; padding: 16px; }
+        .profile-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .btn-primary { background: #4a7a6b; color: #fff; border: none; padding: 10px; border-radius: 30px; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid #4a7a6b; color: #4a7a6b; padding: 10px; border-radius: 30px; width: 100%; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="subscriptionCheck" class="hidden">
-        <div style="background:#ffffff; border-radius:20px; padding:30px 20px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-            <div class="emoji-big" style="margin-bottom:12px;">📢</div>
-            <h2 style="margin-bottom:6px;">Подпишись на канал</h2>
-            <p style="color:#6f5f4f; margin-bottom:20px; font-size:14px;">Чтобы выполнять задания, подпишись на наш канал:</p>
+        <div style="background:#fff; border-radius:16px; padding:20px; text-align:center;">
+            <h2>📢 Подпишись на канал</h2>
+            <p style="margin-bottom:16px;">Чтобы выполнять задания, подпишись на наш канал:</p>
             <a href="https://t.me/YANISY_FREELANCE" target="_blank">
-                <button class="btn-primary">📲 Перейти в канал</button>
+                <button class="btn-primary">Перейти в канал</button>
             </a>
-            <button class="btn-outline" style="margin-top:10px;" onclick="checkSubscription()">✅ Я подписался(ась)</button>
+            <button class="btn-outline" onclick="checkSubscription()">✅ Я подписался(ась)</button>
         </div>
     </div>
 
@@ -160,30 +49,21 @@
             <span class="header-balance" id="headerBalance">0 ₽</span>
         </div>
 
-        <div class="welcome-card" id="welcomeBlock">
+        <div class="welcome-card">
             <h2>👋 Привет, <span id="userName">Гость</span>!</h2>
-            <p>Выполняй задания и зарабатывай коины!</p>
+            <p style="color:#666; margin-top:4px;">Выполняй задания и зарабатывай коины!</p>
         </div>
-
-        <div class="section-title">📋 Доступные задания</div>
-        <div id="taskList"></div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('tasks')">
-                <span>📋</span> Задания
-            </div>
-            <div class="nav-item" onclick="switchTab('profile')">
-                <span>👤</span> Профиль
-            </div>
-            <div class="nav-item" onclick="switchTab('leaderboard')">
-                <span>🏆</span> Статистика
-            </div>
-            <div class="nav-item" onclick="switchTab('withdraw')">
-                <span>💸</span> Вывод
-            </div>
+            <div class="nav-item active" onclick="switchTab('tasks')"><span>📋</span> Задания</div>
+            <div class="nav-item" onclick="switchTab('profile')"><span>👤</span> Профиль</div>
+            <div class="nav-item" onclick="switchTab('leaderboard')"><span>🏆</span> Статистика</div>
+            <div class="nav-item" onclick="switchTab('withdraw')"><span>💸</span> Вывод</div>
         </div>
 
-        <div id="tasks" class="page active"></div>
+        <div id="tasks" class="page active">
+            <div id="taskList"></div>
+        </div>
 
         <div id="profile" class="page">
             <div class="profile-card">
@@ -198,20 +78,14 @@
         </div>
 
         <div id="leaderboard" class="page">
-            <div class="profile-card">
-                <h3 style="margin-bottom:8px;">🏆 Статистика</h3>
-                <div id="lbList"></div>
-            </div>
+            <div class="profile-card"><h3>🏆 Статистика</h3><div id="lbList"></div></div>
         </div>
 
         <div id="withdraw" class="page">
             <div class="profile-card">
-                <h3 style="margin-bottom:8px;">💸 Вывод средств</h3>
-                <p style="color:#6f5f4f; font-size:14px; margin-bottom:12px;">Для вывода средств напиши в личку:</p>
-                <a href="https://t.me/HEDYPA" target="_blank">
-                    <button class="btn-primary">✉️ @HEDYPA</button>
-                </a>
-                <p style="color:#6f5f4f; font-size:13px; margin-top:12px;">После выполнения задания сделай скриншот и отправь в личку.</p>
+                <h3>💸 Вывод средств</h3>
+                <p style="color:#666; margin:8px 0;">Для вывода напиши в личку:</p>
+                <a href="https://t.me/HEDYPA" target="_blank"><button class="btn-primary">✉️ @HEDYPA</button></a>
             </div>
         </div>
     </div>
@@ -221,15 +95,9 @@
         const WORDS = ["сапог","банан","котик","пирожок","зонтик","облако","радуга","карандаш","книжка","чашка","тарелка","вилка","ложка","подушка","одеяло","шкаф","стул","стол","рюкзак","тетрадь","ручка","ластик","линейка","фломастер","краски","кисточка","палитра","мольберт","ножницы","клей","бумага","конверт","открытка","свеча","фонарик","компас","карта","глобус","микрофон","наушники","колонка","гитара","барабан","скрипка","флейта","клавиши","нота","мелодия","ритм","танец","солнце","луна","звезда","планета","ракета","космос","метеор","галактика","туманность","орбита","спутник","марс","венера","юпитер","сатурн","уран","нептун","плутон","астероид","комета","шоколад","конфета","зефир","мармелад","печенье","кекс","торт","рулет","вафля","пряник","заяц","белка","ёжик","сова","орёл","сокол","чайка","воробей","синица","снегирь","снег","дождь","ветер","гроза","молния","туман","иней","роса","туча","град"];
 
         let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-            name: 'Гость',
-            promo: WORDS[Math.floor(Math.random() * WORDS.length)],
-            balance: 0,
-            tasksDone: 0,
-            referrals: 0,
-            isSubscribed: false,
-            hasStarted: false
+            name: 'Гость', promo: WORDS[Math.floor(Math.random() * WORDS.length)],
+            balance: 0, tasksDone: 0, referrals: 0, isSubscribed: false, hasStarted: false
         };
-
         function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
         const tasks = [
@@ -251,10 +119,7 @@
                 if (promo && promo.length > 2) {
                     db.balance += 15;
                     let allUsers = JSON.parse(localStorage.getItem('yanisy_all_users')) || {};
-                    if (allUsers[promo]) {
-                        allUsers[promo].referrals += 1;
-                        localStorage.setItem('yanisy_all_users', JSON.stringify(allUsers));
-                    }
+                    if (allUsers[promo]) { allUsers[promo].referrals += 1; localStorage.setItem('yanisy_all_users', JSON.stringify(allUsers)); }
                 }
                 db.name = name || 'Гость';
                 db.hasStarted = true;
@@ -263,18 +128,14 @@
                 allUsers[db.promo] = { name: db.name, referrals: 0 };
                 localStorage.setItem('yanisy_all_users', JSON.stringify(allUsers));
             }
-            if (!db.isSubscribed) {
-                document.getElementById('subscriptionCheck').classList.remove('hidden');
-            } else {
-                document.getElementById('mainApp').classList.remove('hidden');
-            }
+            if (!db.isSubscribed) { document.getElementById('subscriptionCheck').classList.remove('hidden'); }
+            else { document.getElementById('mainApp').classList.remove('hidden'); }
             render();
             checkAdmin();
         }
 
         function checkSubscription() {
-            db.isSubscribed = true;
-            save();
+            db.isSubscribed = true; save();
             document.getElementById('subscriptionCheck').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             render();
@@ -288,10 +149,7 @@
                 const div = document.createElement('div');
                 div.className = 'nav-item';
                 div.innerHTML = '<span>⚙️</span> Админка';
-                div.onclick = () => {
-                    const path = window.location.pathname.replace(/index\.html$/, 'admin.html');
-                    window.location.href = path;
-                };
+                div.onclick = () => { window.location.href = window.location.pathname.replace(/index\.html$/, 'admin.html'); };
                 nav.appendChild(div);
             }
         }
@@ -306,35 +164,23 @@
         function render() {
             document.getElementById('userName').textContent = db.name;
             document.getElementById('headerBalance').textContent = db.balance + ' ₽';
-
-            const taskList = document.getElementById('taskList');
-            taskList.innerHTML = tasks.map(t => `
+            document.getElementById('taskList').innerHTML = tasks.map(t => `
                 <div class="task-card" onclick="window.open('${t.link}', '_blank')">
-                    <div class="task-left">
-                        <h4>${t.title}</h4>
-                        <p>${t.desc}</p>
-                    </div>
+                    <div><h4>${t.title}</h4><p style="font-size:13px;color:#666;">${t.desc}</p></div>
                     <div class="task-right">${t.price} ₽</div>
                 </div>
             `).join('');
-
             document.getElementById('pName').textContent = db.name;
             document.getElementById('pBalance').textContent = db.balance + ' ₽';
             document.getElementById('pTasks').textContent = db.tasksDone;
             document.getElementById('pPromo').textContent = db.promo;
             let allUsers = JSON.parse(localStorage.getItem('yanisy_all_users')) || {};
-            let refCount = allUsers[db.promo]?.referrals || 0;
-            document.getElementById('pReferrals').textContent = refCount;
-
-            const lb = document.getElementById('lbList');
-            let mock = Object.entries(allUsers).map(([code, data]) => ({
-                name: data.name || 'Аноним',
-                coins: 0
-            }));
+            document.getElementById('pReferrals').textContent = allUsers[db.promo]?.referrals || 0;
+            let mock = Object.entries(allUsers).map(([c, d]) => ({ name: d.name || 'Аноним', coins: 0 }));
             mock.push({ name: db.name, coins: db.balance });
             mock.sort((a, b) => b.coins - a.coins);
-            lb.innerHTML = mock.slice(0, 10).map((u, i) => `
-                <div class="lb-row">
+            document.getElementById('lbList').innerHTML = mock.slice(0, 10).map((u, i) => `
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;">
                     <span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`} ${u.name}</span>
                     <span>${u.coins} ₽</span>
                 </div>
