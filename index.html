@@ -3,133 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YANISY || freelance</title>
+    <title>YANISY</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #faf8f6;
-            color: #2b2b2b;
+            background: #f8f5f2;
+            color: #1a1a1a;
             padding: 20px;
-            max-width: 600px;
+            max-width: 480px;
             margin: 0 auto;
         }
         .hidden { display: none; }
-        .header {
+        .header-balance {
+            background: #ffffff;
+            border-radius: 40px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .header-balance h1 { font-size: 22px; color: #4a3a2e; margin: 0; }
+        .coin-pill {
+            background: #e6ddd5;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #3d2c1e;
+        }
+        .welcome-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border-left: 4px solid #4a7a6b;
+        }
+        .welcome-card h2 { font-size: 18px; color: #4a3a2e; }
+        .welcome-card p { color: #5f4f3f; margin-top: 6px; font-size: 14px; }
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4a3a2e;
+            margin: 16px 0 8px 0;
         }
         .task-card {
-            background: #fff;
-            padding: 14px 16px;
+            background: #ffffff;
             border-radius: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            cursor: pointer;
-        }
-        .task-title { font-weight: 600; font-size: 16px; }
-        .task-price { font-weight: 700; color: #5f7d5a; float: right; }
-        .nav-bar {
+            padding: 14px 18px;
+            margin-bottom: 10px;
             display: flex;
-            gap: 6px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .nav-btn {
-            flex: 1;
-            background: #e8d5c4;
-            border: none;
-            padding: 10px 0;
-            border-radius: 20px;
-            font-weight: 600;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            min-width: 80px;
-            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
-        .nav-btn.active { background: #8a6b5a; color: #fff; }
-        .page { display: none; }
+        .task-card:active { background: #f2ece8; }
+        .task-left h4 { font-size: 16px; margin-bottom: 2px; }
+        .task-left p { font-size: 13px; color: #6f5f4f; }
+        .task-right { font-weight: 700; color: #4a7a6b; font-size: 16px; }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 18px 0;
+            border-top: 1px solid #e8e2dc;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #8a7a6a;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        .nav-item.active { color: #4a3a2e; font-weight: 600; background: #f2ece8; }
+        .nav-item span { font-size: 20px; margin-bottom: 2px; }
+        .page { display: none; padding-bottom: 80px; }
         .page.active { display: block; }
         .profile-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .btn-primary {
+            background: #4a7a6b;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .lb-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #eee;
         }
-        .sub-block {
-            background: #fff;
-            padding: 16px;
-            border-radius: 16px;
-            margin-bottom: 12px;
-        }
-        .btn-primary {
-            background: #8a6b5a;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-        .btn-sec {
-            background: #aaa;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 8px;
-        }
-        .small-text { font-size: 13px; color: #666; }
+        .small-text { font-size: 13px; color: #6f5f4f; }
     </style>
 </head>
 <body>
 
-    <!-- ===== ЭКРАН ПОДПИСКИ ===== -->
+    <!-- ПОДПИСКА -->
     <div id="subscriptionCheck" class="hidden">
-        <h2>📢 Подпишись на канал</h2>
-        <p>Чтобы выполнять задания, подпишись на наш канал:</p>
-        <a href="https://t.me/YANISY_FREELANCE" target="_blank">
-            <button class="btn-primary">📲 Перейти в канал</button>
-        </a>
-        <button class="btn-sec" onclick="checkSubscription()">✅ Я подписался(ась)</button>
+        <div style="background:#fff; border-radius:20px; padding:30px 20px; text-align:center;">
+            <h2>📢 Подпишись на канал</h2>
+            <p style="margin:10px 0 20px;">Чтобы выполнять задания, подпишись на наш канал:</p>
+            <a href="https://t.me/YANISY_FREELANCE" target="_blank">
+                <button class="btn-primary">📲 Перейти в канал</button>
+            </a>
+            <button style="margin-top:12px; background:#ddd; border:none; padding:10px 20px; border-radius:30px; font-weight:600; width:100%;" onclick="checkSubscription()">✅ Я подписался(ась)</button>
+        </div>
     </div>
 
-    <!-- ===== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===== -->
+    <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
     <div id="mainApp" class="hidden">
 
-        <div class="header">
-            <h2>YANISY</h2>
-            <span id="headerBalance" style="background:#e8d5c4; padding:4px 12px; border-radius:20px;">0 ₽</span>
+        <!-- Шапка -->
+        <div class="header-balance">
+            <h1>YANISY</h1>
+            <span class="coin-pill" id="headerBalance">0 ₽</span>
         </div>
 
-        <div class="nav-bar" id="navBar">
-            <button class="nav-btn active" onclick="switchTab('tasks')">📋 Задания</button>
-            <button class="nav-btn" onclick="switchTab('profile')">👤 Профиль</button>
-            <button class="nav-btn" onclick="switchTab('leaderboard')">📊 Статистика</button>
+        <!-- Приветствие -->
+        <div class="welcome-card">
+            <h2>👋 Привет, <span id="userName">Гость</span>!</h2>
+            <p>Выполняй задания и зарабатывай коины!</p>
         </div>
 
-        <div id="tasks" class="page active">
-            <div id="taskList"></div>
+        <!-- Задания -->
+        <div class="section-title">📋 Доступные задания</div>
+        <div id="taskList"></div>
+
+        <!-- Нижняя навигация -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('tasks')">
+                <span>📋</span> Задания
+            </div>
+            <div class="nav-item" onclick="switchTab('profile')">
+                <span>👤</span> Профиль
+            </div>
+            <div class="nav-item" onclick="switchTab('leaderboard')">
+                <span>🏆</span> Статистика
+            </div>
         </div>
+
+        <!-- Страницы -->
+        <div id="tasks" class="page active"></div>
 
         <div id="profile" class="page">
-            <div class="sub-block">
+            <div class="profile-card">
                 <h3>👤 Мой профиль</h3>
                 <div class="profile-row"><span>Имя:</span> <span id="pName">—</span></div>
                 <div class="profile-row"><span>Баланс:</span> <span id="pBalance">0 ₽</span></div>
-                <div class="profile-row"><span>Выполнено заданий:</span> <span id="pTasks">0</span></div>
+                <div class="profile-row"><span>Выполнено:</span> <span id="pTasks">0</span></div>
+                <div class="profile-row"><span>👥 Приведено:</span> <span id="pReferrals">0</span></div>
                 <div class="profile-row"><span>Мой промокод:</span> <span id="pPromo">—</span></div>
-                <button class="btn-primary" style="margin-top:12px;" onclick="copyPromo()">📋 Скопировать промокод</button>
+                <button class="btn-primary" onclick="copyPromo()">📋 Скопировать промокод</button>
             </div>
         </div>
 
         <div id="leaderboard" class="page">
-            <div class="sub-block">
+            <div class="profile-card">
                 <h3>🏆 Статистика</h3>
                 <div id="lbList"></div>
             </div>
@@ -137,22 +187,23 @@
     </div>
 
     <script>
-        // ===== БАЗА ДАННЫХ =====
+        // === БАЗА ===
         const STORAGE_KEY = 'yanisy_data';
-        const ADMIN_ID = "7747891963"; // твой Telegram ID
+        const WORDS = ["сапог","банан","котик","пирожок","зонтик","облако","радуга","карандаш","книжка","чашка","тарелка","вилка","ложка","подушка","одеяло","шкаф","стул","стол","рюкзак","тетрадь","ручка","ластик","линейка","фломастер","краски","кисточка","палитра","мольберт","ножницы","клей","бумага","конверт","открытка","свеча","фонарик","компас","карта","глобус","микрофон","наушники","колонка","гитара","барабан","скрипка","флейта","клавиши","нота","мелодия","ритм","танец","солнце","луна","звезда","планета","ракета","космос","метеор","галактика","туманность","орбита","спутник","марс","венера","юпитер","сатурн","уран","нептун","плутон","астероид","комета","шоколад","конфета","зефир","мармелад","печенье","кекс","торт","рулет","вафля","пряник","заяц","белка","ёжик","сова","орёл","сокол","чайка","воробей","синица","снегирь","снег","дождь","ветер","гроза","молния","туман","иней","роса","туча","град"];
 
         let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-            name: '',
-            promo: '',
+            name: 'Гость',
+            promo: WORDS[Math.floor(Math.random() * WORDS.length)],
             balance: 0,
             tasksDone: 0,
+            referrals: 0,
             isSubscribed: false,
             hasStarted: false
         };
 
         function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
-        // ===== ЗАДАНИЯ =====
+        // === ЗАДАНИЯ ===
         const tasks = [
             { id: 1, title: '🧘 Йога', desc: 'Скачай и открой', price: 45, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74923' },
             { id: 2, title: '🛒 Walmart (iPhone)', desc: 'Введи номер телефона', price: 70, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74764' },
@@ -165,19 +216,27 @@
             { id: 9, title: '📌 Авито', desc: 'Напиши в личку @HEDYPA', price: 80, link: 'https://t.me/HEDYPA' }
         ];
 
-        // ===== ЗАПУСК ПРИЛОЖЕНИЯ =====
+        // === ЗАПУСК ===
         function init() {
             if (!db.hasStarted) {
-                let name = prompt('🎀 Привет! Как тебя зовут?');
+                let name = prompt('🎀 Как тебя зовут?');
                 let promo = prompt('🔑 Введи промокод (если есть):');
-                db.name = name || 'Гость';
-                db.promo = promo || '—';
                 if (promo && promo.length > 2) {
                     db.balance += 15;
-                    alert('🎉 +15 коинов за промокод!');
+                    // Увеличиваем счётчик приведённых у того, чей промокод
+                    let allUsers = JSON.parse(localStorage.getItem('yanisy_all_users')) || {};
+                    if (allUsers[promo]) {
+                        allUsers[promo].referrals += 1;
+                        localStorage.setItem('yanisy_all_users', JSON.stringify(allUsers));
+                    }
                 }
+                db.name = name || 'Гость';
                 db.hasStarted = true;
                 save();
+                // Сохраняем этого пользователя в общую базу
+                let allUsers = JSON.parse(localStorage.getItem('yanisy_all_users')) || {};
+                allUsers[db.promo] = { name: db.name, referrals: 0 };
+                localStorage.setItem('yanisy_all_users', JSON.stringify(allUsers));
             }
             if (!db.isSubscribed) {
                 document.getElementById('subscriptionCheck').classList.remove('hidden');
@@ -188,7 +247,6 @@
             checkAdmin();
         }
 
-        // ===== ПРОВЕРКА ПОДПИСКИ =====
         function checkSubscription() {
             db.isSubscribed = true;
             save();
@@ -197,42 +255,45 @@
             render();
         }
 
-        // ===== АДМИН-КНОПКА (только для тебя) =====
+        // === АДМИНКА ===
+        const ADMIN_ID = "7747891963";
         function checkAdmin() {
-            // Проверяем, открыт ли Mini App через Telegram
             const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
             if (user && user.id == ADMIN_ID) {
-                const nav = document.getElementById('navBar');
-                const btn = document.createElement('button');
-                btn.className = 'nav-btn';
-                btn.innerText = '⚙️ Админка';
-                btn.onclick = () => {
-                    // Переход на admin.html (в той же папке)
-                    const current = window.location.pathname;
-                    const adminPath = current.replace(/index\.html$/, 'admin.html');
-                    window.location.href = adminPath;
+                const nav = document.querySelector('.bottom-nav');
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.innerHTML = '<span>⚙️</span> Админка';
+                div.onclick = () => {
+                    const path = window.location.pathname.replace(/index\.html$/, 'admin.html');
+                    window.location.href = path;
                 };
-                nav.appendChild(btn);
+                nav.appendChild(div);
             }
         }
 
-        // ===== НАВИГАЦИЯ =====
+        // === НАВИГАЦИЯ ===
         function switchTab(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
         }
 
-        // ===== ОТРИСОВКА =====
+        // === ОТРИСОВКА ===
         function render() {
+            document.getElementById('userName').textContent = db.name;
+            document.getElementById('headerBalance').textContent = db.balance + ' ₽';
+
             // Задания
             const taskList = document.getElementById('taskList');
             taskList.innerHTML = tasks.map(t => `
                 <div class="task-card" onclick="window.open('${t.link}', '_blank')">
-                    <span class="task-title">${t.title}</span>
-                    <span class="task-price">${t.price} ₽</span>
-                    <br><span class="small-text">${t.desc}</span>
+                    <div class="task-left">
+                        <h4>${t.title}</h4>
+                        <p>${t.desc}</p>
+                    </div>
+                    <div class="task-right">${t.price} ₽</div>
                 </div>
             `).join('');
 
@@ -241,26 +302,27 @@
             document.getElementById('pBalance').textContent = db.balance + ' ₽';
             document.getElementById('pTasks').textContent = db.tasksDone;
             document.getElementById('pPromo').textContent = db.promo;
-            document.getElementById('headerBalance').textContent = db.balance + ' ₽';
+            // Проверяем приведённых
+            let allUsers = JSON.parse(localStorage.getItem('yanisy_all_users')) || {};
+            let refCount = allUsers[db.promo]?.referrals || 0;
+            document.getElementById('pReferrals').textContent = refCount;
 
             // Лидерборд
             const lb = document.getElementById('lbList');
-            const mock = [
-                { name: db.name, coins: db.balance },
-                { name: 'Аня', coins: 320 },
-                { name: 'Катя', coins: 180 },
-                { name: 'Лена', coins: 95 },
-                { name: 'Юля', coins: 50 }
-            ];
-            lb.innerHTML = mock.map((u, i) => `
-                <div class="profile-row">
+            let mock = Object.entries(allUsers).map(([code, data]) => ({
+                name: data.name || 'Аноним',
+                coins: 0
+            }));
+            mock.push({ name: db.name, coins: db.balance });
+            mock.sort((a, b) => b.coins - a.coins);
+            lb.innerHTML = mock.slice(0, 10).map((u, i) => `
+                <div class="lb-row">
                     <span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`} ${u.name}</span>
                     <span>${u.coins} ₽</span>
                 </div>
             `).join('');
         }
 
-        // ===== КОПИРОВАНИЕ ПРОМОКОДА =====
         function copyPromo() {
             navigator.clipboard.writeText(db.promo);
             alert('📋 Промокод скопирован: ' + db.promo);
