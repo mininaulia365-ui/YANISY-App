@@ -29,11 +29,13 @@
 </head>
 <body>
 
+    <!-- Шапка с балансом (всегда видна) -->
     <div class="header">
         <h1>YANISY</h1>
         <span class="header-balance" id="headerBalance">0 ₽</span>
     </div>
 
+    <!-- Страницы -->
     <div id="tasks" class="page active">
         <div id="taskList"></div>
     </div>
@@ -65,6 +67,7 @@
         </div>
     </div>
 
+    <!-- Навигация -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('tasks', this)"><span>📋</span> Задания</div>
         <div class="nav-item" onclick="switchTab('profile', this)"><span>👤</span> Профиль</div>
@@ -73,10 +76,18 @@
     </div>
 
     <script>
+        // ===== СЛОВА ДЛЯ ПРОМОКОДОВ =====
         const WORDS = ["сапог","банан","котик","пирожок","зонтик","облако","радуга","карандаш","книжка","чашка","тарелка","вилка","ложка","подушка","одеяло","шкаф","стул","стол","рюкзак","тетрадь","ручка","ластик","линейка","фломастер","краски","кисточка","палитра","мольберт","ножницы","клей","бумага","конверт","открытка","свеча","фонарик","компас","карта","глобус","микрофон","наушники","колонка","гитара","барабан","скрипка","флейта","клавиши","нота","мелодия","ритм","танец","солнце","луна","звезда","планета","ракета","космос","метеор","галактика","туманность","орбита","спутник","марс","венера","юпитер","сатурн","уран","нептун","плутон","астероид","комета","шоколад","конфета","зефир","мармелад","печенье","кекс","торт","рулет","вафля","пряник","заяц","белка","ёжик","сова","орёл","сокол","чайка","воробей","синица","снегирь","снег","дождь","ветер","гроза","молния","туман","иней","роса","туча","град"];
 
-        let db = JSON.parse(localStorage.getItem('yanisy_data')) || { name: 'Гость', balance: 0, tasksDone: 0, referrals: 0, promo: WORDS[Math.floor(Math.random() * WORDS.length)] };
+        let db = JSON.parse(localStorage.getItem('yanisy_data')) || {
+            name: 'Гость',
+            balance: 0,
+            tasksDone: 0,
+            referrals: 0,
+            promo: WORDS[Math.floor(Math.random() * WORDS.length)]
+        };
 
+        // ===== 10 ЗАДАНИЙ (из твоих скриншотов + Авито/Яндекс) =====
         const tasks = [
             { id: 1, title: '🧘 Йога', desc: 'Скачай и открой', price: 25, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74923' },
             { id: 2, title: '🛒 Walmart (iPhone)', desc: 'Введи номер телефона', price: 35, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74764' },
@@ -87,12 +98,13 @@
             { id: 7, title: '🎮 Just Games', desc: 'Скачай и открой', price: 100, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=73942' },
             { id: 8, title: '📌 Яндекс.Карты', desc: 'Напиши в личку @nealiss_1', price: 80, link: 'https://t.me/nealiss_1' },
             { id: 9, title: '📌 Авито', desc: 'Напиши в личку @HEDYPA', price: 80, link: 'https://t.me/HEDYPA' },
-            { id: 10, title: '🚧 Ожидается', desc: 'Скоро появится', price: 0, link: '#' }
+            { id: 10, title: '🚧 В разработке', desc: 'Скоро появится новое задание', price: 0, link: '#' }
         ];
 
         function init() {
             document.getElementById('tasks').classList.add('active');
             render();
+            checkAdmin();
         }
 
         function render() {
@@ -123,6 +135,23 @@
         }
 
         function copyPromo() { navigator.clipboard.writeText(db.promo); alert('📋 Промокод скопирован: ' + db.promo); }
+
+        // ===== АДМИНКА (только для тебя) =====
+        const ADMIN_ID = "7747891963";
+        function checkAdmin() {
+            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            if (user && user.id == ADMIN_ID) {
+                const nav = document.querySelector('.bottom-nav');
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.innerHTML = '<span>⚙️</span> Админка';
+                div.onclick = () => {
+                    const path = window.location.pathname.replace(/index\.html$/, 'admin.html');
+                    window.location.href = path;
+                };
+                nav.appendChild(div);
+            }
+        }
 
         init();
     </script>
