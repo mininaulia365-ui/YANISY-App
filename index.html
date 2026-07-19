@@ -6,116 +6,98 @@
     <title>YANISY</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #f0f4ff; font-family: -apple-system, sans-serif; padding-bottom: 80px; }
+        body { background: #f5f2ef; font-family: -apple-system, sans-serif; padding: 16px 20px 90px; max-width: 500px; margin: 0 auto; }
         .hidden { display: none !important; }
-        .header { background: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 16px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .header h1 { font-size: 22px; color: #222; }
-        .header-balance { background: #eef3ff; padding: 4px 14px; border-radius: 20px; color: #3b6bff; font-weight: 600; }
-        .page { display: none; padding: 12px 16px; }
-        .page.active { display: block; }
-        .task-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s; }
+        .header { background: #fff; border-radius: 16px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .header h1 { font-size: 20px; color: #222; }
+        .header-balance { background: #eee; padding: 4px 14px; border-radius: 20px; color: #333; font-weight: 600; }
+        .task-card { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
         .task-card:active { transform: scale(0.98); }
-        .task-left h4 { font-size: 16px; color: #222; }
+        .task-left h4 { font-size: 15px; color: #222; }
         .task-left p { font-size: 13px; color: #777; margin-top: 2px; }
-        .task-price { font-size: 15px; font-weight: 600; color: #3b6bff; background: #eef3ff; padding: 4px 12px; border-radius: 12px; }
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff;
-            display: flex; justify-content: space-around; padding: 8px 0 16px 0; border-top: 1px solid #e0e7ff;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.03); z-index: 100;
-        }
+        .task-price { font-weight: 600; color: #4a7a6b; background: #eef3f0; padding: 4px 10px; border-radius: 12px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 8px 0 16px; border-top: 1px solid #ddd; z-index: 10; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: #888; cursor: pointer; }
-        .nav-item.active { color: #3b6bff; font-weight: 600; }
-        .nav-item span { font-size: 24px; }
-        .welcome-card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        .welcome-card h2 { font-size: 18px; color: #222; }
-        .btn-primary { background: #3b6bff; color: #fff; border: none; padding: 10px; border-radius: 30px; width: 100%; cursor: pointer; }
-        .btn-outline { background: transparent; border: 1px solid #3b6bff; color: #3b6bff; padding: 10px; border-radius: 30px; width: 100%; cursor: pointer; }
-        .profile-card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        .profile-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f4ff; }
-        .admin-panel { background: #fff; border-radius: 16px; padding: 16px; margin-top: 12px; border: 1px solid #3b6bff; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        .admin-panel h3 { color: #3b6bff; margin-bottom: 8px; }
-        .admin-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f0f4ff; font-size: 14px; }
+        .nav-item.active { color: #222; font-weight: 600; }
+        .nav-item span { font-size: 22px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .profile-card { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .profile-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+        .btn-primary { background: #4a7a6b; color: #fff; border: none; padding: 10px; border-radius: 30px; width: 100%; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="mainApp" class="hidden">
-        <div class="header">
-            <h1>YANISY</h1>
-            <span class="header-balance" id="headerBalance">0 ₽</span>
-        </div>
+    <div class="header">
+        <h1>YANISY</h1>
+        <span class="header-balance" id="headerBalance">0 ₽</span>
+    </div>
 
-        <div class="welcome-card">
-            <h2>👋 Привет, <span id="userName">Гость</span>!</h2>
-            <p style="color:#666; margin-top:4px;">Выполняй задания и зарабатывай!</p>
-        </div>
+    <div id="tasks" class="page active">
+        <div id="taskList"></div>
+    </div>
 
-        <div id="tasks" class="page active">
-            <div id="taskList"></div>
-        </div>
-
-        <div id="profile" class="page">
-            <div class="profile-card">
-                <h3 style="margin-bottom:8px;">👤 Мой профиль</h3>
-                <div class="profile-row"><span>Имя:</span> <span id="pName">—</span></div>
-                <div class="profile-row"><span>Баланс:</span> <span id="pBalance">0 ₽</span></div>
-                <div class="profile-row"><span>Выполнено:</span> <span id="pTasks">0</span></div>
-                <div class="profile-row"><span>👥 Приведено:</span> <span id="pReferrals">0</span></div>
-                <div class="profile-row"><span>Мой промокод:</span> <span id="pPromo">—</span></div>
-                <button class="btn-primary" onclick="copyPromo()">📋 Скопировать промокод</button>
-            </div>
-        </div>
-
-        <div id="stats" class="page">
-            <div class="profile-card">
-                <h3>🏆 Статистика</h3>
-                <div id="lbList"></div>
-            </div>
-        </div>
-
-        <div id="withdraw" class="page">
-            <div class="profile-card">
-                <h3>💸 Вывод средств</h3>
-                <p style="color:#666; margin:8px 0;">Для вывода напиши в личку:</p>
-                <a href="https://t.me/HEDYPA" target="_blank"><button class="btn-primary">✉️ @HEDYPA</button></a>
-            </div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('tasks', this)"><span>📋</span> Задания</div>
-            <div class="nav-item" onclick="switchTab('profile', this)"><span>👤</span> Профиль</div>
-            <div class="nav-item" onclick="switchTab('stats', this)"><span>🏆</span> Статистика</div>
-            <div class="nav-item" onclick="switchTab('withdraw', this)"><span>💸</span> Вывод</div>
+    <div id="profile" class="page">
+        <div class="profile-card">
+            <h3>👤 Мой профиль</h3>
+            <div class="profile-row"><span>Имя:</span> <span id="pName">—</span></div>
+            <div class="profile-row"><span>Баланс:</span> <span id="pBalance">0 ₽</span></div>
+            <div class="profile-row"><span>Выполнено:</span> <span id="pTasks">0</span></div>
+            <div class="profile-row"><span>👥 Приведено:</span> <span id="pReferrals">0</span></div>
+            <div class="profile-row"><span>Мой промокод:</span> <span id="pPromo">—</span></div>
+            <button class="btn-primary" onclick="copyPromo()">📋 Скопировать промокод</button>
         </div>
     </div>
 
+    <div id="stats" class="page">
+        <div class="profile-card">
+            <h3>🏆 Статистика</h3>
+            <div id="lbList"></div>
+        </div>
+    </div>
+
+    <div id="withdraw" class="page">
+        <div class="profile-card">
+            <h3>💸 Вывод средств</h3>
+            <p style="color:#666; margin:8px 0;">Для вывода напиши в личку:</p>
+            <a href="https://t.me/HEDYPA" target="_blank"><button class="btn-primary">✉️ @HEDYPA</button></a>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tasks', this)"><span>📋</span> Задания</div>
+        <div class="nav-item" onclick="switchTab('profile', this)"><span>👤</span> Профиль</div>
+        <div class="nav-item" onclick="switchTab('stats', this)"><span>🏆</span> Статистика</div>
+        <div class="nav-item" onclick="switchTab('withdraw', this)"><span>💸</span> Вывод</div>
+    </div>
+
     <script>
-        // ===== СЛОВА ДЛЯ ПРОМОКОДОВ =====
         const WORDS = ["сапог","банан","котик","пирожок","зонтик","облако","радуга","карандаш","книжка","чашка","тарелка","вилка","ложка","подушка","одеяло","шкаф","стул","стол","рюкзак","тетрадь","ручка","ластик","линейка","фломастер","краски","кисточка","палитра","мольберт","ножницы","клей","бумага","конверт","открытка","свеча","фонарик","компас","карта","глобус","микрофон","наушники","колонка","гитара","барабан","скрипка","флейта","клавиши","нота","мелодия","ритм","танец","солнце","луна","звезда","планета","ракета","космос","метеор","галактика","туманность","орбита","спутник","марс","венера","юпитер","сатурн","уран","нептун","плутон","астероид","комета","шоколад","конфета","зефир","мармелад","печенье","кекс","торт","рулет","вафля","пряник","заяц","белка","ёжик","сова","орёл","сокол","чайка","воробей","синица","снегирь","снег","дождь","ветер","гроза","молния","туман","иней","роса","туча","град"];
 
-        // ===== БАЗА ДАННЫХ =====
         let db = JSON.parse(localStorage.getItem('yanisy_data')) || { name: 'Гость', balance: 0, tasksDone: 0, referrals: 0, promo: WORDS[Math.floor(Math.random() * WORDS.length)] };
 
         const tasks = [
-            { id: 1, title: '🧘 Йога', desc: 'Скачай и открой', price: 45, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74923' },
-            { id: 2, title: '🛒 Walmart (iPhone)', desc: 'Введи номер телефона', price: 70, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74764' },
-            { id: 3, title: '🛒 Walmart (Android)', desc: 'Введи номер телефона', price: 90, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=75095' },
-            { id: 4, title: '📱 Carrefour', desc: 'Скачай приложение', price: 25, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=70876' },
-            { id: 5, title: '🛫 Airport (Android)', desc: 'Пройди 3 уровня', price: 50, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=75065' },
-            { id: 6, title: '🎮 Just Games', desc: 'Скачай и открой', price: 500, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=73942' },
-            { id: 7, title: '📌 Яндекс.Карты', desc: 'Напиши в личку @nealiss_1', price: 80, link: 'https://t.me/nealiss_1' },
-            { id: 8, title: '📌 Авито', desc: 'Напиши в личку @HEDYPA', price: 80, link: 'https://t.me/HEDYPA' }
+            { id: 1, title: '🧘 Йога', desc: 'Скачай и открой', price: 25, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74923' },
+            { id: 2, title: '🛒 Walmart (iPhone)', desc: 'Введи номер телефона', price: 35, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=74764' },
+            { id: 3, title: '🛒 Walmart (Android)', desc: 'Введи номер телефона', price: 35, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=75095' },
+            { id: 4, title: '📱 Carrefour', desc: 'Скачай приложение', price: 10, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=70876' },
+            { id: 5, title: '🛫 Airport (iPhone)', desc: 'Пройди 3 уровня', price: 30, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=75066' },
+            { id: 6, title: '🛫 Airport (Android)', desc: 'Пройди 3 уровня', price: 30, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=75065' },
+            { id: 7, title: '🎮 Just Games', desc: 'Скачай и открой', price: 100, link: 'https://singingfiles.com/show.php?l=0&u=2542250&id=73942' },
+            { id: 8, title: '📌 Яндекс.Карты', desc: 'Напиши в личку @nealiss_1', price: 80, link: 'https://t.me/nealiss_1' },
+            { id: 9, title: '📌 Авито', desc: 'Напиши в личку @HEDYPA', price: 80, link: 'https://t.me/HEDYPA' },
+            { id: 10, title: '🚧 Ожидается', desc: 'Скоро появится', price: 0, link: '#' }
         ];
 
         function init() {
-            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('tasks').classList.add('active');
             render();
-            checkAdmin();
         }
 
         function render() {
-            document.getElementById('userName').textContent = db.name;
             document.getElementById('headerBalance').textContent = db.balance + ' ₽';
+
             document.getElementById('taskList').innerHTML = tasks.map(t => `
                 <div class="task-card" onclick="window.open('${t.link}', '_blank')">
                     <div class="task-left">
@@ -125,6 +107,7 @@
                     <div class="task-price">${t.price} ₽</div>
                 </div>
             `).join('');
+
             document.getElementById('pName').textContent = db.name;
             document.getElementById('pBalance').textContent = db.balance + ' ₽';
             document.getElementById('pTasks').textContent = db.tasksDone;
@@ -140,20 +123,6 @@
         }
 
         function copyPromo() { navigator.clipboard.writeText(db.promo); alert('📋 Промокод скопирован: ' + db.promo); }
-
-        // ===== АДМИН-ПАНЕЛЬ =====
-        const ADMIN_ID = "7747891963";
-        function checkAdmin() {
-            const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            if (user && user.id == ADMIN_ID) {
-                const nav = document.querySelector('.bottom-nav');
-                const div = document.createElement('div');
-                div.className = 'nav-item';
-                div.innerHTML = '<span>⚙️</span> Админка';
-                div.onclick = () => { window.location.href = window.location.pathname.replace(/index\.html$/, 'admin.html'); };
-                nav.appendChild(div);
-            }
-        }
 
         init();
     </script>
